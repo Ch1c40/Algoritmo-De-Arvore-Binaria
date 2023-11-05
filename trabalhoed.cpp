@@ -64,6 +64,38 @@ NO* Busca(NO* p, int k){
     }
     return q;
 }
+NO* Remocao(NO* p, int k){
+    NO* q1 = p;
+    NO* q2 = nullptr;
+    NO* q3 = nullptr;
+    if (!p || p->conteudo == k)
+        return nullptr;
+    while (q1 != nullptr && q1->conteudo != k)
+    {
+        q2 = q1;
+        if (q1->conteudo > k)
+        {
+            q1 = q1->esq;
+        }
+        else
+        {
+            q1 = q1->dir;
+        }
+        
+    }
+    if (q1 == nullptr)
+    {
+        return p;
+    }
+    q3 = q1->dir;
+    while (q3->esq != nullptr)
+    {
+        q3 = q3->esq;
+    }
+    q3->esq = q1->esq;
+    q2->esq = q1->dir;
+    return p;
+}
 
 int main(){
     NO* raiz = Inserção(nullptr, 20);
@@ -84,5 +116,11 @@ int main(){
         std::cout << "Valor encontrado: " << B->conteudo;
     else
         std::cout << "Valor não encontrado.";
+    std::cout << std::endl;
+    int z;
+    std::cout << "Digite um valor para remover: " << std::endl;
+    std::cin >> z;
+    Remocao(raiz, z);
+    preordem(raiz);
 }
 
