@@ -1,132 +1,174 @@
 #include <iostream>
 
-struct NO{
-    int conteudo;
-    struct NO *esq, *dir;
+struct NO {
+  int conteudo;
+  struct NO *esq, *dir;
 };
-void preordem(NO *p){
-    std::cout << p->conteudo << " ";
-    if(p->esq)
-        preordem(p->esq);
-    if(p->dir)
-        preordem(p->dir);
+void preordem(NO *p) {
+  std::cout << p->conteudo << " ";
+  if (p->esq)
+    preordem(p->esq);
+  if (p->dir)
+    preordem(p->dir);
 }
-NO* Inserção(NO *p, int k){
-    NO *R = new NO();
-    R->conteudo = k;
-    if(p == nullptr){
-        p = R;
-        return R;
+NO *Insercao(NO *p, int k) {
+  NO *R = new NO();
+  R->conteudo = k;
+  if (p == nullptr) {
+    p = R;
+    return R;
+  }
+  NO *q1 = p;
+  NO *q2 = nullptr;
+  while (q1 != nullptr) {
+    q2 = q1;
+    if (q1->conteudo > k) {
+      q1 = q1->esq;
+    } else {
+      q1 = q1->dir;
     }
-    NO *q1 = p;
-    NO *q2 = nullptr;
-    while (q1 != nullptr)
-    {
-        q2 = q1;
-        if (q1->conteudo > k)
-        {
-            q1 = q1->esq;
-        }
-        else
-        {
-            q1 = q1->dir;
-        }
-        
-    }
-    if (q2->conteudo > k)
-    {
-        q2->esq = R;
-    }
-    else
-    {
-        q2->dir = R;
-    }
-    return p;
+  }
+  if (q2->conteudo > k) {
+    q2->esq = R;
+  } else {
+    q2->dir = R;
+  }
+  return p;
 }
-NO* criaArvore(int k){
-    return Inserção(nullptr, k);
-}
-NO* Busca(NO* p, int k){
-    NO* q = p;
-    while (q->conteudo != k && q)
-    {
-        if (q->conteudo > k)
-        {
-            q = q->esq;
-        }
-        else
-        {
-            q = q->dir;
-        }
-        
-    }
-    if (!q)
-    {
-        return nullptr;
-    }
-    return q;
-}
-NO* Remocao(NO* p, int k){
-    NO* q1 = p;
-    NO* q2 = nullptr;
-    NO* q3 = nullptr;
-    if (!p || p->conteudo == k)
-        return nullptr;
 
-    if (p->conteudo == k)
-        q2 = p;
+NO *Busca(NO *p, int k) {
+  NO *q = p;
+  while (q && q->conteudo != k) {
+    if (q->conteudo > k) {
+      q = q->esq;
+    } else {
+      q = q->dir;
+    }
+  }
+  if (!q) {
+    return nullptr;
+  }
+  return q;
+}
+NO *Remocao(NO *p, int k) {
+  NO *q1 = p;
+  NO *q2 = nullptr;
+  NO *q3 = nullptr;
+  NO *q4 = nullptr;
+  if (!p || p->conteudo == k)
+    return nullptr;
+
+  if (p->conteudo == k)
+    q2 = p;
+
+  while (q1 != nullptr && q1->conteudo != k) {
+    q2 = q1;
+    if (q1->conteudo > k) {
+      q1 = q1->esq;
+    } else {
+      q1 = q1->dir;
+    }
+  }
+  if (q1 == nullptr) {
+    return p;
+  }
+  q3 = q1->dir;
+  while (q3->esq != nullptr) {
+    q4 = q3;
+    q3 = q3->esq;
+  }
+  q2->esq = q3;
+  q3->esq = q1->esq;
+  q3->dir = q1->dir;
+  q4->esq = nullptr;
+  return p;
+}
+
+NO* Remocao2(NO* p, int k){
+  if(p == nullptr)
+    return p;
+
+  if(p->conteudo > k){
+    p->esq = Remocao2(p->esq, k);
+    return p;
+  }
+  else if (p->conteudo < k){
+    p->dir = Remocao2(p->dir, k);
+    return p;
+  }
+  if(p->esq == nullptr){
+    NO* q1 = p->dir;
+    delete p;
+    return q1;
+  }
+  else if(p->dir == nullptr){
+    NO* q1 = p->esq;
+    delete p;
+    return q1;
+  }
+  else{
+    NO* q2 = p;
+    NO* q3 = p->dir;
+    while(q3->esq != nullptr){
+      q2 = q3;
+      q3 = q3->esq;
+    }
+    if(q2 != p)
+      q2->esq = q3->dir;
     
-    while (q1 != nullptr && q1->conteudo != k)
-    {
-        q2 = q1;
-        if (q1->conteudo > k)
-        {
-            q1 = q1->esq;
-        }
-        else
-        {
-            q1 = q1->dir;
-        }
-        
-    }
-    if (q1 == nullptr)
-    {
-        return p;
-    }
-    q3 = q1->dir;
-    while (q3->esq != nullptr)
-    {
-        q3 = q3->esq;
-    }
-    q3->esq = q1->esq;
-    q2->esq = q1->dir;
-    return p;
-}
-
-int main(){
-    NO* raiz = Inserção(nullptr, 20);
-    for (int i = 0; i < 8; i++)
-    {
-        int l;
-        std::cout << "Digite os valores para a arvore: " << std::endl;
-        std::cin >> l;
-        Inserção(raiz, l);
-    }
-    preordem(raiz);
-    std::cout << std::endl;
-    int j;
-    std::cout << "Digite um valor para buscar: " << std::endl;
-    std::cin >> j;
-    NO* B = Busca(raiz, j);
-    if (B)
-        std::cout << "Valor encontrado: " << B->conteudo;
     else
-        std::cout << "Valor não encontrado.";
-    std::cout << std::endl;
-    int z;
-    std::cout << "Digite um valor para remover: " << std::endl;
-    std::cin >> z;
-    Remocao(raiz, z);
-    preordem(raiz);
+      q2->dir = q3->dir;
+    
+    p->conteudo = q3->conteudo;  
+
+    delete q3;
+    return p;
+  }
+    
 }
 
+int main() {
+    NO *raiz = nullptr;
+    NO *B;
+    while (true){
+        int expression;
+        std::cout << "\nEscolha oq deseja fazer:\n1.Inserção\n2.Busca\n3.Remoção\n4.Sair" << std::endl;
+        std::cin >> expression;
+        switch (expression)
+        {
+        case 1:
+            int l;
+            std::cout << "Digite os valores para a arvore: " << std::endl;
+            std::cin >> l;
+            raiz = Insercao(raiz, l);
+            preordem(raiz);
+            break;
+
+        case 2:
+            int j;
+            std::cout << "Digite um valor para buscar: " << std::endl;
+            std::cin >> j;
+            B = Busca(raiz, j);
+            if (B)
+                std::cout << "Valor encontrado: " << B->conteudo;
+            else
+                std::cout << "Valor não encontrado.";
+            std::cout << std::endl;
+            break;
+
+        case 3:
+            int z;
+            std::cout << "Digite um valor para remover: " << std::endl;
+            std::cin >> z;
+            raiz = Remocao2(raiz, z);
+            preordem(raiz);
+            break;
+
+        case 4:
+            return 1;
+        default:
+            std::cout << "Input não encontrado." << std::endl;
+            break;
+        }
+    }
+}
