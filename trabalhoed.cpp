@@ -6,8 +6,10 @@ struct NO{
 };
 void preordem(NO *p){
     std::cout << p->conteudo << " ";
-    preordem(p->esq);
-    preordem(p->dir);
+    if(p->esq)
+        preordem(p->esq);
+    if(p->dir)
+        preordem(p->dir);
 }
 NO* Inserção(NO *p, int k){
     NO *R = new NO();
@@ -70,6 +72,10 @@ NO* Remocao(NO* p, int k){
     NO* q3 = nullptr;
     if (!p || p->conteudo == k)
         return nullptr;
+
+    if (p->conteudo == k)
+        q2 = p;
+    
     while (q1 != nullptr && q1->conteudo != k)
     {
         q2 = q1;
