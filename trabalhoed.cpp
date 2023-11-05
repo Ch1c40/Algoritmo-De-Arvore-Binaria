@@ -50,50 +50,17 @@ NO *Busca(NO *p, int k) {
   }
   return q;
 }
-NO *Remocao(NO *p, int k) {
-  NO *q1 = p;
-  NO *q2 = nullptr;
-  NO *q3 = nullptr;
-  NO *q4 = nullptr;
-  if (!p || p->conteudo == k)
-    return nullptr;
 
-  if (p->conteudo == k)
-    q2 = p;
-
-  while (q1 != nullptr && q1->conteudo != k) {
-    q2 = q1;
-    if (q1->conteudo > k) {
-      q1 = q1->esq;
-    } else {
-      q1 = q1->dir;
-    }
-  }
-  if (q1 == nullptr) {
-    return p;
-  }
-  q3 = q1->dir;
-  while (q3->esq != nullptr) {
-    q4 = q3;
-    q3 = q3->esq;
-  }
-  q2->esq = q3;
-  q3->esq = q1->esq;
-  q3->dir = q1->dir;
-  q4->esq = nullptr;
-  return p;
-}
-
-NO* Remocao2(NO* p, int k){
+NO* Remocao(NO* p, int k){
   if(p == nullptr)
     return p;
 
   if(p->conteudo > k){
-    p->esq = Remocao2(p->esq, k);
+    p->esq = Remocao(p->esq, k);
     return p;
   }
   else if (p->conteudo < k){
-    p->dir = Remocao2(p->dir, k);
+    p->dir = Remocao(p->dir, k);
     return p;
   }
   if(p->esq == nullptr){
@@ -108,16 +75,16 @@ NO* Remocao2(NO* p, int k){
   }
   else{
     NO* q2 = p;
-    NO* q3 = p->dir;
-    while(q3->esq != nullptr){
+    NO* q3 = p->esq;
+    while(q3->dir != nullptr){
       q2 = q3;
-      q3 = q3->esq;
+      q3 = q3->dir;
     }
     if(q2 != p)
-      q2->esq = q3->dir;
+      q2->dir = q3->esq;
     
     else
-      q2->dir = q3->dir;
+      q2->esq = q3->esq;
     
     p->conteudo = q3->conteudo;  
 
@@ -160,7 +127,7 @@ int main() {
             int z;
             std::cout << "Digite um valor para remover: " << std::endl;
             std::cin >> z;
-            raiz = Remocao2(raiz, z);
+            raiz = Remocao(raiz, z);
             preordem(raiz);
             break;
 
