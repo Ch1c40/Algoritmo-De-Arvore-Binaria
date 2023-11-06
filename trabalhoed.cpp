@@ -128,7 +128,10 @@ int main() {
             std::cout << "Digite um valor para remover: " << std::endl;
             std::cin >> z;
             raiz = Remocao(raiz, z);
-            preordem(raiz);
+            if(!raiz)
+              std::cout << "Elemento não encontrado" << std::endl;
+            else
+              preordem(raiz);
             break;
 
         case 4:
